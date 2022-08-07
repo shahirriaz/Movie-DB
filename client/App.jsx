@@ -28,7 +28,13 @@ export const APIContext = createContext({
       headers,
     });
   },
-  update: "",
+  async updateMovie(movie) {
+    return fetch(`/api/movies/update`, {
+      method: "PUT",
+      body: JSON.stringify(movie),
+      headers,
+    });
+  },
   delete: "",
 });
 

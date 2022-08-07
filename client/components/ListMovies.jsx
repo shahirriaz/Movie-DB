@@ -10,7 +10,7 @@ function MovieCard({ id, title, plot, genre, fullPlot, poster }) {
       <img
         className="w-full max-h-32 object-contain"
         src={poster}
-        alt="Sunset in the mountains"
+        alt="No img was returned"
       />
       <div className="px-6 py-4">
         <div className="font-bold text-xl mb-2 ">{title}</div>

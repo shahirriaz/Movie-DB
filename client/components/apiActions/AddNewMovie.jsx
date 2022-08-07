@@ -9,7 +9,6 @@ export function AddNewMovie() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
@@ -21,6 +20,7 @@ export function AddNewMovie() {
     plot,
     genre,
     featured,
+    author,
   }) => {
     if (featured === "Yes") {
       featured = Boolean(true);
@@ -37,6 +37,7 @@ export function AddNewMovie() {
         plot,
         genre,
         featured,
+        author,
       }).then((response) => {
         if (response.status === 409) {
           alert("A movie with this data already exixsts");
@@ -53,8 +54,8 @@ export function AddNewMovie() {
     <div>
       <ActionHeader actionTxt="Add new movie" />
       <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg">
-        <div className="flex flex-wrap -mx-3 mb-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+        <div className="flex -mx-3 mb-6">
+          <div className="w-full md:w-full px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               for="title"
@@ -72,7 +73,7 @@ export function AddNewMovie() {
               <p className="text-red-500 text-xs italic">Title is required</p>
             )}
           </div>
-          <div className="w-full md:w-1/2 px-3">
+          <div className="w-full md:w-1/3 px-3">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               for="year"
@@ -93,10 +94,23 @@ export function AddNewMovie() {
               placeholder="1987"
             />
             {errors.year && (
-              <p className="text-red-500 text-xs italic">
-                Year is required and must be number
-              </p>
+              <p className="text-red-500 text-xs italic">Year is required</p>
             )}
+          </div>
+          <div className="w-full md:w-1/2 px-3">
+            <label
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              for="author"
+            >
+              Author
+            </label>
+            <input
+              {...register("author", { required: true })}
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              id="author"
+              type="text"
+              placeholder="Author"
+            />
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 mb-6">

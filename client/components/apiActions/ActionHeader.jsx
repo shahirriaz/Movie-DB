@@ -21,7 +21,7 @@ export function ActionHeader({ actionTxt }) {
       return (
         <Link to={`/admin/${key}`}>
           <span
-            className={`mt-3 inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2`}
+            className={`hover:bg-gray-300 shadow mt-3 inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2`}
           >
             {value}
           </span>

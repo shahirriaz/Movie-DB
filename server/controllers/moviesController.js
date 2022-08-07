@@ -9,8 +9,8 @@ export default function getAllMovies() {
 
 export function createNewMovie() {
   return async (req, res) => {
-    const { title, year, genre, plot, fullPlot, featured, poster } = req.body;
-    console.log(featured);
+    const { title, year, genre, plot, fullPlot, featured, poster, author } =
+      req.body;
     if (!title || !year || !genre || !plot || !fullPlot || !poster)
       return res.status(400).json({
         message: `Title,year, genre and plot is required, please add introduction plot also`,
@@ -35,6 +35,7 @@ export function createNewMovie() {
         fullPlot: fullPlot,
         featured: featured,
         poster: poster,
+        author: author,
       });
       res
         .status(201)
@@ -61,6 +62,12 @@ export function updateMovie() {
 
     if (req.body?.title) movie.title = req.body.title;
     if (req.body?.year) movie.year = req.body.year;
+    if (req.body?.poster) movie.poster = req.body.poster;
+    if (req.body?.poster) movie.poster = req.body.poster;
+    if (req.body?.fullPlot) movie.fullPlot = req.body.fullPlot;
+    if (req.body?.plot) movie.plot = req.body.plot;
+    if (req.body?.genre) movie.genre = req.body.genre;
+    if (req.body?.featured) movie.featured = req.body.featured;
 
     const result = await movie.save();
 
