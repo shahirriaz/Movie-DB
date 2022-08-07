@@ -2,7 +2,7 @@ import { ActionHeader } from "./ActionHeader";
 import { APIContext } from "../../App";
 import { useLoading } from "../../utils/UseLoading";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { getTimeStamps } from "../../utils/getTimeStamps";
 
 export function YourMovies() {
   const { getMovies } = useContext(APIContext);
@@ -11,57 +11,18 @@ export function YourMovies() {
   let filter = data?.filter(({ author }) => author === "Shahir Riaz");
 
   let map = filter?.map((item) => {
-    let date = new Date(item["updatedAt"]);
-    const days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    let fullYear = date.getFullYear();
-    let month = months[date.getMonth()];
-    let day = days[date.getDay()];
-    let dayNr = date.getDate();
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-
-    console.log(dayNr);
-
-    const time =
-      day +
-      " " +
-      dayNr +
-      " " +
-      month +
-      " / " +
-      fullYear +
-      " " +
-      hours +
-      ":" +
-      minutes;
+    let updatedAt = new Date(item["updatedAt"]);
+    let createdAt = new Date(item["createdAt"]);
+    const { updatedAtTime, createdAtTime } = getTimeStamps(
+      updatedAt,
+      createdAt
+    );
 
     return {
       title: item["title"],
       author: item["author"],
-      updatedAt: time,
+      updatedAtTime,
+      createdAtTime,
     };
   });
 
@@ -98,6 +59,12 @@ export function YourMovies() {
           className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
         >
           Last updated
+        </th>{" "}
+        <th
+          scope="col"
+          className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+        >
+          Created
         </th>
       </tr>
     );

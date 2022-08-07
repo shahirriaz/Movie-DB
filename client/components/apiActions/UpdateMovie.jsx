@@ -30,6 +30,8 @@ export function UpdateMovie() {
     } else {
       featured = Boolean(false);
     }
+
+    // getting the movie which is selected
     const { _id: id } = filter?.find(
       ({ title: titleFromDb }) => titleFromDb === watch("movie")
     );
