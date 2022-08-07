@@ -8,7 +8,7 @@ export function FrontPage() {
   const isAuthenticated = useIsAuthenticated();
   return (
     <div className="flex min-h-screen">
-      <div className="mt-3.5">
+      <div className="mt-3.5 mb-10">
         <h3 className="border-b-2 border-y-gray-100 text-3xl mb-4">
           Featured films
         </h3>

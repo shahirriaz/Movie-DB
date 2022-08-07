@@ -38,6 +38,7 @@ export function UpdateMovie() {
                 className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="genre"
               >
+                <option disabled>Choose movie</option>
                 {data?.map(({ title }) => {
                   return <option>{title}</option>;
                 })}

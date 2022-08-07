@@ -2,7 +2,7 @@ import { useLoading } from "../utils/UseLoading";
 import { fetchJSON } from "../utils/FetchJSON";
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { MovieDataContext } from "../App";
+import { APIContext } from "../App";
 
 function MovieCard({ id, title, plot, genre, fullPlot, poster }) {
   return (
@@ -31,11 +31,9 @@ function MovieCard({ id, title, plot, genre, fullPlot, poster }) {
 }
 
 export function ListMovies({ featuredMovies }) {
-  const { movieData } = useContext(MovieDataContext);
+  const { getMovies } = useContext(APIContext);
 
-  const { loading, error, data } = useLoading(async () =>
-    fetchJSON("/api/movies")
-  );
+  const { loading, error, data } = useLoading(async () => getMovies(), []);
 
   if (loading) {
     return <div>Loading....</div>;
@@ -53,7 +51,7 @@ export function ListMovies({ featuredMovies }) {
   if (featuredMovies) {
     const filter = data?.filter(({ featured }) => Boolean(featured));
     return (
-      <div className="flex gap-4">
+      <div className="flex gap-4 flex-wrap">
         {filter?.map(({ _id, title, plot, genre, fullPlot, poster }) => (
           <MovieCard
             id={_id}

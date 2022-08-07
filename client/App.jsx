@@ -12,34 +12,47 @@ import { MovieDetails } from "./components/MovieDetails";
 import { Admin } from "./components/Admin";
 import { DynamicComponent } from "./components/DynamicComponent";
 import { createContext, useEffect, useState } from "react";
+import { fetchJSON } from "./utils/FetchJSON";
 
-export const MovieDataContext = createContext({});
+const headers = new Headers();
+headers.append("Content-Type", "application/json");
+
+export const APIContext = createContext({
+  async getMovies() {
+    return fetchJSON("/api/movies");
+  },
+  async postMovie(movie) {
+    return fetch("/api/movies/new", {
+      method: "POST",
+      body: JSON.stringify(movie),
+      headers,
+    });
+  },
+  update: "",
+  delete: "",
+});
 
 export function App() {
   const msalInstance = new PublicClientApplication(msalConfig);
 
-  const [movieData, setMovieData] = useState([]);
-
   //Todo: create paywall
 
   return (
-    <MovieDataContext.Provider value={{ movieData, setMovieData }}>
-      <BrowserRouter>
-        <MsalProvider instance={msalInstance}>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<FrontPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/login/callback" element={<LoginCallback />} />
-              <Route path="/movies" element={<ListMovies />} />
-              <Route path="/movies/:id" element={<MovieDetails />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/admin/:action" element={<DynamicComponent />} />
-              <Route path="/profile" element={<Profile />} />
-            </Routes>
-          </Layout>
-        </MsalProvider>
-      </BrowserRouter>
-    </MovieDataContext.Provider>
+    <BrowserRouter>
+      <MsalProvider instance={msalInstance}>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<FrontPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/login/callback" element={<LoginCallback />} />
+            <Route path="/movies" element={<ListMovies />} />
+            <Route path="/movies/:id" element={<MovieDetails />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/:action" element={<DynamicComponent />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </Layout>
+      </MsalProvider>
+    </BrowserRouter>
   );
 }

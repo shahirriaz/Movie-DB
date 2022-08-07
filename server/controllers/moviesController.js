@@ -7,10 +7,11 @@ export default function getAllMovies() {
   };
 }
 
-export function createNewMovie(recipient) {
+export function createNewMovie() {
   return async (req, res) => {
     const { title, year, genre, plot, fullPlot, featured, poster } = req.body;
-    if (!title || !year || !genre || !plot || !fullPlot)
+    console.log(featured);
+    if (!title || !year || !genre || !plot || !fullPlot || !poster)
       return res.status(400).json({
         message: `Title,year, genre and plot is required, please add introduction plot also`,
       });

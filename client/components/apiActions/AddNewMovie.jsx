@@ -1,33 +1,54 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ActionHeader } from "./ActionHeader";
+import { APIContext } from "../../App";
 
 export function AddNewMovie() {
-  // const { setMovieData } = useContext(MovieDataContext);
+  const { postMovie } = useContext(APIContext);
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
-  const [ws, setWs] = useState();
 
-  // useEffect(() => {
-  //   const ws = new WebSocket("ws://" + window.location.host);
-  //   ws.onopen = (event) => {
-  //     console.log("Opened", event);
-  //   };
-  //   ws.onmessage = async (event) => {
-  //     // gets data back from server
-  //     const data = await JSON.parse(event.data);
-  //     setMovieData(data);
-  //   };
-  //   setWs(ws);
-  // }, []);
-  //
-  const onSubmit = (data) => {
+  const onSubmit = async ({
+    title,
+    year,
+    poster,
+    fullPlot,
+    plot,
+    genre,
+    featured,
+  }) => {
+    if (featured === "Yes") {
+      featured = Boolean(true);
+    } else {
+      featured = Boolean(false);
+    }
+    try {
+      setLoading(true);
+      await postMovie({
+        title,
+        year,
+        poster,
+        fullPlot,
+        plot,
+        genre,
+        featured,
+      }).then((response) => {
+        if (response.status === 409) {
+          alert("A movie with this data already exixsts");
+        }
+        alert("Your movie was successfully added");
+        setLoading(false);
+      });
+    } catch (e) {
+      console.log(e.message);
+    }
     // ws?.send(JSON.stringify({ data }));
   };
-
   return (
     <div>
       <ActionHeader actionTxt="Add new movie" />
@@ -41,12 +62,15 @@ export function AddNewMovie() {
               Title
             </label>
             <input
-              {...register("title")}
+              {...register("title", { required: true })}
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="title"
               type="text"
               placeholder="Batman"
             />
+            {errors.title && (
+              <p className="text-red-500 text-xs italic">Title is required</p>
+            )}
           </div>
           <div className="w-full md:w-1/2 px-3">
             <label
@@ -56,12 +80,23 @@ export function AddNewMovie() {
               Year
             </label>
             <input
-              {...register("year")}
+              {...register("year", {
+                required: true,
+                maxLength: 1,
+                valueAsNumber: true,
+              })}
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="year"
-              type="text"
+              type="number"
+              min="1700"
+              max="2099"
               placeholder="1987"
             />
+            {errors.year && (
+              <p className="text-red-500 text-xs italic">
+                Year is required and must be number
+              </p>
+            )}
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 mb-6">
@@ -73,12 +108,15 @@ export function AddNewMovie() {
               Cover photo
             </label>
             <input
-              {...register("poster")}
-              className=" resize-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              {...register("poster", { required: true })}
+              className=" resize-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="coverPhoto"
               type="text"
               placeholder="https//somethin/.com/img.jpg"
             />
+            {errors.poster && (
+              <p className="text-red-500 text-xs italic">Poster is required</p>
+            )}
             <p className="text-gray-600 text-xs italic mb-2">
               Cover image perhaps?
             </p>
@@ -91,11 +129,16 @@ export function AddNewMovie() {
               Full Plot
             </label>
             <textarea
-              {...register("fullPlot")}
-              className=" h-32 resize-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              {...register("fullPlot", { required: true })}
+              className=" h-32 resize-none appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="fullplot"
               placeholder="Full Plot"
             />
+            {errors.fullPlot && (
+              <p className="text-red-500 text-xs italic">
+                Fullplot is required
+              </p>
+            )}
             <p className="text-gray-600 text-xs italic mb-2">
               Make it as long and as crazy as you'd like
             </p>
@@ -129,14 +172,20 @@ export function AddNewMovie() {
             </label>
             <div className="relative">
               <select
-                {...register("genre")}
+                {...register("genre", { required: true })}
                 className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="genre"
               >
+                <option value="" disabled selected>
+                  Genre
+                </option>
                 <option>Fantasy</option>
                 <option>Horror</option>
                 <option>Action</option>
               </select>
+              {errors.genre && (
+                <p className="text-red-500 text-xs italic">Genre is required</p>
+              )}
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
                   className="fill-current h-4 w-4"
@@ -186,7 +235,7 @@ export function AddNewMovie() {
               type="submit"
               className="w-full bg-blue-500 text-white border border-gray-200 rounded py-3 px-4 leading-tight hover:bg-blue-700"
             >
-              Create
+              {loading ? "Posting...." : "Create"}
             </button>
           </div>
         </div>
@@ -196,3 +245,19 @@ export function AddNewMovie() {
 }
 
 // <button onClick={handleNewMovie}>Create new movie</button>
+
+// const [ws, setWs] = useState();
+
+// useEffect(() => {
+//   const ws = new WebSocket("ws://" + window.location.host);
+//   ws.onopen = (event) => {
+//     console.log("Opened", event);
+//   };
+//   ws.onmessage = async (event) => {
+//     // gets data back from server
+//     const data = await JSON.parse(event.data);
+//     setMovieData(data);
+//   };
+//   setWs(ws);
+// }, []);
+//
