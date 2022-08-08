@@ -41,6 +41,11 @@ export const APIContext = createContext({
 export function App() {
   const msalInstance = new PublicClientApplication(msalConfig);
 
+  //Todo: update featured select is bugged
+  //Todo: delete functionality
+  //Todo: sidebar cat functionality
+  //Todo: list movies --> Filter functionality
+  //Todo: fix auth provider for google and microsoft
   //Todo: create paywall
 
   return (

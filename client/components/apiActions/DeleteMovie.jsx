@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useLoading } from "../../utils/UseLoading";
 import { fetchJSON } from "../../utils/FetchJSON";
+import { ActionHeader } from "./ActionHeader";
 
 export function DeleteMovie() {
   const {
@@ -15,9 +16,8 @@ export function DeleteMovie() {
 
   return (
     <>
-      <span className="mt-3 inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-        Delete movie
-      </span>
+      <ActionHeader actionTxt="Delete movie" />
+
       <div className="grid grid-cols-2 gap-5">
         <div className="flex flex-wrap -mx-3 mb-2">
           <div className="w-full  px-3 mb-6 md:mb-0">
