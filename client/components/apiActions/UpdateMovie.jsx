@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form";
 import { useLoading } from "../../utils/UseLoading";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ActionHeader } from "./ActionHeader";
 
-import { APIContext } from "../../App";
+import { APIContext } from "../../context/APIContext";
+import { genres } from "../../data/genres";
 
 export function UpdateMovie() {
   const { getMovies, updateMovie } = useContext(APIContext);
   const { register, handleSubmit, watch } = useForm();
-
   const [loadingData, setLoadingData] = useState(false);
 
   const { data } = useLoading(async () => getMovies(), []);
@@ -58,6 +58,7 @@ export function UpdateMovie() {
       console.log(e.message);
     }
   };
+
   return (
     <div>
       <ActionHeader actionTxt="Update movie" />
@@ -203,7 +204,15 @@ export function UpdateMovie() {
                     id="genre"
                   >
                     <option>{isArray && filter[0].genre}</option>
-                    <option>Action</option>
+                    {genres
+                      .filter((genre) => {
+                        if (genre !== filter[0]?.genre) {
+                          return genre;
+                        }
+                      })
+                      .map((genre) => (
+                        <option>{genre}</option>
+                      ))}
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg

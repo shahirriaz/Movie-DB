@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ActionHeader } from "./ActionHeader";
-import { APIContext } from "../../App";
+import { APIContext } from "../../context/APIContext";
+import { genres } from "../../data/genres";
 
 export function AddNewMovie() {
   const { postMovie } = useContext(APIContext);
@@ -193,9 +194,9 @@ export function AddNewMovie() {
                 <option value="" disabled selected>
                   Genre
                 </option>
-                <option>Fantasy</option>
-                <option>Horror</option>
-                <option>Action</option>
+                {genres.map((genre) => (
+                  <option>{genre}</option>
+                ))}
               </select>
               {errors.genre && (
                 <p className="text-red-500 text-xs italic">Genre is required</p>

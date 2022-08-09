@@ -32,9 +32,9 @@ export function ActionHeader({ actionTxt }) {
 
   return (
     <div className="flex justify-between mb-2 border-b-2">
-      <span className="mt-3 inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+      <h3 className="block uppercase tracking-wide text-gray-700 text-x font-bold mt-3">
         {actionTxt}
-      </span>
+      </h3>
       <div>{renderActionBtns()}</div>
     </div>
   );

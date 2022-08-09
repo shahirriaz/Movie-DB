@@ -1,24 +1,29 @@
-import React from "react";
-import { useMsal } from "@azure/msal-react";
-import { loginRequest } from "../authConfig/authConfig";
+import React, { useCallback, useState } from "react";
+import { useAuth } from "../hooks/use-auth";
 
-function handleLogin(instance) {
-  instance.loginRedirect(loginRequest).catch((e) => {
-    console.error(e);
-  });
-}
+export const SignInButton = ({
+  textColor = "text-white",
+  provider,
+  btnTxt = "Sign in",
+}) => {
+  const { handleGoogleLogin, handleMicrosoftLogin, msalInstance } = useAuth();
 
-//Todo: Implement google here
-
-export const SignInButton = ({ as }) => {
-  const { instance } = useMsal();
+  const handleLogin = async (provider) => {
+    switch (provider) {
+      case "google":
+        await handleGoogleLogin(provider);
+        break;
+      case "microsoft":
+        await handleMicrosoftLogin(msalInstance);
+    }
+  };
 
   return (
     <button
-      onClick={() => handleLogin(instance)}
-      className="bg-transparent text-blue-700 font-semibold hover:text-white py-2 px-4 border  rounded"
+      onClick={() => handleLogin(provider)}
+      className={`bg-transparent ${textColor} font-semibold hover:${textColor} py-2 px-4 border  rounded-2xl`}
     >
-      Sign in as {as}
+      <a>{btnTxt}</a>
     </button>
   );
 };

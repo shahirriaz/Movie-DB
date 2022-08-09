@@ -1,18 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { APIContext } from "../context/APIContext";
+import { useParams } from "react-router-dom";
+import { useAuth } from "../hooks/use-auth";
 
 export function LoginCallback() {
+  const { reload } = useAuth();
+  const { registerLogin } = useContext(APIContext);
+  const { provider } = useParams();
   useEffect(async () => {
     const { access_token } = Object.fromEntries(
       new URLSearchParams(window.location.hash.substring(1))
     );
 
-    await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ access_token }),
-    });
+    await registerLogin(provider, { access_token });
+    reload();
     window.location.href = "/";
   }, []);
 

@@ -1,30 +1,59 @@
-import { useEffect } from "react";
-import { fetchJSON } from "../utils/FetchJSON";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { LoginCallback } from "../helpers/LoginCallback";
+import { APIContext } from "../context/APIContext";
+import { useContext, useEffect } from "react";
+import { useAuth } from "../hooks/use-auth";
 
 export function LoginPage() {
-  // const { discovery_endpoint, client_id, response_type } =
-  //   useContext(LoginContext);
+  const { googleData: config } = useAuth();
 
-  useEffect(async () => {
-    const { authorization_endpoint } = await fetchJSON(
-      "https://accounts.google.com/.well-known/openid-configuration"
-    );
+  return (
+    <div>
+      <Routes>
+        <Route path={"/"} element={<StartLogin config={config} />} />
+        <Route path={"*"} element={<StartLogin config={config} />} />
+      </Routes>
+    </div>
+  );
+}
+
+function StartLogin({ config }) {
+  return (
+    <div>
+      <h1>Login</h1>
+      <LoginButton
+        label={"Login with Google"}
+        config={config}
+        provider={"google"}
+      />
+      <LoginButton
+        label={"Login with ID-porten"}
+        config={config}
+        provider={"idporten"}
+      />
+    </div>
+  );
+}
+
+function LoginButton({ config, label, provider }) {
+  async function handleLogin() {
+    const { authorization_endpoint, response_type, scope, client_id } =
+      config[provider];
 
     const parameters = {
-      response_type: "token",
-      client_id:
-        "946080345339-uhfncmu533tmardmeiiauepicqe3prlo.apps.googleusercontent.com",
-      scope: "email profile",
-      redirect_uri: window.location.origin + "/login/callback",
+      response_type,
+      client_id,
+      scope,
+      redirect_uri: `${window.location.origin}/login/${provider}/callback`,
     };
 
     window.location.href =
       authorization_endpoint + "?" + new URLSearchParams(parameters);
-  }, []);
+  }
 
   return (
     <div>
-      <h1>Please wait...</h1>
+      <button onClick={handleLogin}>{label}</button>
     </div>
   );
 }

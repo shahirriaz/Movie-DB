@@ -23,6 +23,7 @@ export function useLoading(loadingFunction, deps = []) {
   return {
     loading,
     error,
+    reload: load,
     data,
   };
 }

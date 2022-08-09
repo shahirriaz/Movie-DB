@@ -2,8 +2,17 @@ import Movie from "../models/Movie.js";
 
 export default function getAllMovies() {
   return async (req, res) => {
+    const { genre } = req.query;
     const allMovies = await Movie.find({}).exec();
-    res.json(allMovies);
+
+    if (genre) {
+      const moviesByGenre = await Movie.find({
+        genre: genre.charAt(0).toUpperCase() + genre.slice(1),
+      }).exec();
+      res.json(moviesByGenre);
+    } else {
+      res.json(allMovies);
+    }
   };
 }
 

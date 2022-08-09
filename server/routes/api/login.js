@@ -7,7 +7,14 @@ import {
 export function LoginApi() {
   const router = new Router();
 
-  router.route("/").get(getUserInfo()).post(setAccessToken());
+  router.get("/", getUserInfo());
+
+  router.post("/:provider", setAccessToken());
+
+  router.delete("/", (req, res) => {
+    res.clearCookie("google_access_token");
+    res.sendStatus(200);
+  });
 
   return router;
 }

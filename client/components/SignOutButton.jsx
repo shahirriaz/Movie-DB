@@ -1,26 +1,26 @@
-import React from "react";
-import { useMsal } from "@azure/msal-react";
-import Button from "react-bootstrap/Button";
+import React, from "react";
 
-function handleLogout(instance) {
-  instance.logoutRedirect().catch((e) => {
-    console.error(e);
-  });
-}
+import { useAuth } from "../hooks/use-auth";
 
-/**
- * Renders a button which, when selected, will redirect the page to the logout prompt
- */
-export const SignOutButton = () => {
-  const { instance } = useMsal();
+export const SignOutButton = ({ textColor = "text-white", btnTxt, provider, }) => {
+  const { handleMicrosoftLogout, handleGoogleLogout, msalInstance } = useAuth();
+
+  const handleLogout = async (provider) => {
+    switch (provider) {
+      case "google":
+        await handleGoogleLogout();
+        break;
+      case "microsoft":
+        await handleMicrosoftLogout(msalInstance);
+    }
+  };
 
   return (
-    <Button
-      variant="secondary"
-      className="ml-auto"
-      onClick={() => handleLogout(instance)}
+    <button
+      onClick={() => handleLogout(provider)}
+      className={`bg-transparent ${textColor} font-semibold hover:${textColor} py-2 px-4 border  rounded-2xl`}
     >
-      Sign out using Redirect
-    </Button>
+      {btnTxt}
+    </button>
   );
 };

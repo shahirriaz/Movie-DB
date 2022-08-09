@@ -1,8 +1,8 @@
 import { ActionHeader } from "./ActionHeader";
-import { APIContext } from "../../App";
 import { useLoading } from "../../utils/UseLoading";
 import { useContext } from "react";
 import { getTimeStamps } from "../../utils/getTimeStamps";
+import { APIContext } from "../../context/APIContext";
 
 export function YourMovies() {
   const { getMovies } = useContext(APIContext);

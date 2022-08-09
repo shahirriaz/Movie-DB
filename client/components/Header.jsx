@@ -1,7 +1,17 @@
 import { SignInButton } from "./SigninButton";
 import { Link } from "react-router-dom";
+import { useIsAuthenticated } from "@azure/msal-react";
+import { SignOutButton } from "./SignOutButton";
+import { useAuth } from "../hooks/use-auth";
+import { decodeMSToken } from "../auth/requireAuth";
 
 export function Header() {
+  const auth = useAuth();
+  const userIsPresent = auth.user && Object.keys(auth.user).length > 0;
+  const res = decodeMSToken();
+
+  const adminIsLoggedIn = res !== null;
+
   return (
     <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
@@ -39,16 +49,19 @@ export function Header() {
             </a>
           </Link>
         </div>
+        {/*<Link to="/profile">*/}
+        {/*  <a>Profile</a>*/}
+        {/*</Link>*/}
         <div className="flex items-center">
           <div className="mr-2">
-            <SignInButton as="Admin" />
+            {adminIsLoggedIn ? (
+              <SignOutButton provider="microsoft" btnTxt="Sign out as admin" />
+            ) : userIsPresent ? (
+              <SignOutButton provider="google" btnTxt="Sign out as user" />
+            ) : (
+              <SignInButton btnTxt="Sign in as user" provider="google" />
+            )}
           </div>
-          <div className="mr-2">
-            <SignInButton as="User" />
-          </div>
-          <a className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white">
-            Profile
-          </a>
         </div>
       </div>
     </nav>
