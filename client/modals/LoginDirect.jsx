@@ -6,8 +6,6 @@ export function LoginDirect() {
     state: { from },
   } = useLocation();
 
-  console.log(from);
-
   const renderSignInBtn = () => {
     switch (from) {
       case "admin":
